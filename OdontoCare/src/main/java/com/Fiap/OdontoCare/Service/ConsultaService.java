@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.sql.CallableStatement;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,40 +31,6 @@ public class ConsultaService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-//    // Método para inserir uma consulta usando Procedure
-//    public boolean insertConsultaUsingProcedure(ConsultaDTO consultaDTO) {
-//        return jdbcTemplate.update(connection -> {
-//            CallableStatement call = connection.prepareCall("{execute InserirConsulta(?, ?, ?, ?)}");
-//            call.setDate(1, java.sql.Date.valueOf(String.valueOf(consultaDTO.getDataConsulta())));
-//            call.setLong(2, consultaDTO.getPacienteId());
-//            call.setLong(3, consultaDTO.getDentistaId());
-//            call.setString(4, consultaDTO.getStatus());
-//            return call;
-//        }) > 0;
-//    }
-//
-//    // Método para atualizar uma consulta usando Procedure
-//    public boolean updateConsultaUsingProcedure(ConsultaDTO consultaDTO) {
-//        return jdbcTemplate.update(connection -> {
-//            CallableStatement call = connection.prepareCall("{execute AtualizarConsulta(?, ?, ?, ?, ?)}");
-//            call.setLong(1, consultaDTO.getIdConsulta());
-//            call.setDate(2, java.sql.Date.valueOf(String.valueOf(consultaDTO.getDataConsulta())));
-//            call.setLong(3, consultaDTO.getPacienteId());
-//            call.setLong(4, consultaDTO.getDentistaId());
-//            call.setString(5, consultaDTO.getStatus());
-//            return call;
-//        }) > 0;
-//    }
-//
-//    // Método para deletar uma consulta usando Procedure
-//    public boolean deleteConsultaUsingProcedure(Long idConsulta) {
-//        return jdbcTemplate.update(connection -> {
-//            CallableStatement call = connection.prepareCall("{execute DeletarConsulta(?)}");
-//            call.setLong(1, idConsulta);
-//            return call;
-//        }) > 0;
-//    }
-
     public List<Consulta> findAll() {
         return consultaRepository.findAll();
     }
@@ -74,7 +40,7 @@ public class ConsultaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada com ID: " + id)));
     }
 
-    public Consulta save(ConsultaDTO consultaDTO) {
+    public void save(ConsultaDTO consultaDTO) {
         Consulta consulta = new Consulta();
         consulta.setDataConsulta(consultaDTO.getDataConsulta());
         consulta.setStatus(consultaDTO.getStatus());
@@ -89,19 +55,19 @@ public class ConsultaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Dentista não encontrado com ID: " + consultaDTO.getDentistaId()));
         consulta.setDentista(dentista); // Supondo que você tenha um método setDentista na classe Consulta
 
-        String sql = "{ call Insert_Consulta(?, ?, ?, ?) }"; // Ajuste conforme o nome e parâmetros da sua procedure
+        callProcedureInsert(consulta.getDataConsulta(), consulta.getPaciente().getId(), consulta.getDentista().getIdDentista(), consulta.getStatus());
 
-        jdbcTemplate.update(sql,
-                consultaDTO.getDataConsulta(),
-                consultaDTO.getStatus(),
-                consultaDTO.getPacienteId(),
-                consultaDTO.getDentistaId()
-        );
-
-        return consultaRepository.save(consulta);
+        //return consultaRepository.save(consulta);
     }
 
-    public Consulta update(ConsultaDTO consultaDTO) {
+    // Método para chamar a procedure de inserção
+    private void callProcedureInsert(LocalDateTime dataConsulta, Long pacienteId, Long dentistaId, String status) {
+        String sql = "CALL INSERT_CONSULTA(?, ?, ?, ?)";
+
+        jdbcTemplate.update(sql, dataConsulta, pacienteId, dentistaId, status);
+    }
+
+    public void update(ConsultaDTO consultaDTO) {
         Consulta consulta = consultaRepository.findById(consultaDTO.getIdConsulta())
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada com ID: " + consultaDTO.getIdConsulta()));
 
@@ -120,10 +86,27 @@ public class ConsultaService {
             consulta.setDentista(dentista); // Atualizando o dentista
         }
 
-        return consultaRepository.save(consulta);
+        callProcedureUpdate(consulta.getIdConsulta(), consulta.getDataConsulta(), consulta.getPaciente().getId(), consulta.getDentista().getIdDentista(), consulta.getStatus());
+
+        //return consultaRepository.save(consulta);
+    }
+
+    // Método para chamar a procedure de atualização
+    private void callProcedureUpdate(Long idConsulta, LocalDateTime dataConsulta, Long pacienteId, Long dentistaId, String status) {
+        String sql = "CALL UPDATE_CONSULTA(?, ?, ?, ?, ?)";
+
+        jdbcTemplate.update(sql, idConsulta, dataConsulta, pacienteId, dentistaId, status);
     }
 
     public void deleteById(Long id) {
-        consultaRepository.deleteById(id);
+        callProcedureDelete(id);
+        //consultaRepository.deleteById(id);
+    }
+
+    //Método pra chamar a procedure de deleção
+    private void callProcedureDelete(Long idConsulta){
+        String sql = "CALL DELETE_CONSULTA(?)";
+
+        jdbcTemplate.update(sql, idConsulta);
     }
 }

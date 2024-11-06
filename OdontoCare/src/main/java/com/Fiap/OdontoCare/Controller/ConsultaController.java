@@ -28,9 +28,15 @@ public class ConsultaController {
         return consultaService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+//    @PostMapping
+//    public ResponseEntity<Consulta> createConsulta(@Valid @RequestBody ConsultaDTO consultaDTO) {
+//        Consulta savedConsulta = consultaService.save(consultaDTO);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(savedConsulta);
+//    }
+
     @PostMapping
-    public ResponseEntity<Consulta> createConsulta(@Valid @RequestBody ConsultaDTO consultaDTO) {
-        Consulta savedConsulta = consultaService.save(consultaDTO);
+    public ResponseEntity<Consulta> createConsulta(@Valid @RequestBody ConsultaDTO consultaDTO){
+        Consulta savedConsulta = consultaService.insertConsultaUsingProcedure(consultaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedConsulta);
     }
 

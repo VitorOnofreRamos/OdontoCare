@@ -27,8 +27,5 @@ public class DentistaDTO {
     @NotBlank
     private String telefone;
 
-    @Email
-    private String email;
-
     private List<Long> consultasIds;
 }

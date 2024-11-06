@@ -31,39 +31,39 @@ public class ConsultaService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    // Método para inserir uma consulta usando Procedure
-    public boolean insertConsultaUsingProcedure(ConsultaDTO consultaDTO) {
-        return jdbcTemplate.update(connection -> {
-            CallableStatement call = connection.prepareCall("{execute InserirConsulta(?, ?, ?, ?)}");
-            call.setDate(1, java.sql.Date.valueOf(String.valueOf(consultaDTO.getDataConsulta())));
-            call.setLong(2, consultaDTO.getPacienteId());
-            call.setLong(3, consultaDTO.getDentistaId());
-            call.setString(4, consultaDTO.getStatus());
-            return call;
-        }) > 0;
-    }
-
-    // Método para atualizar uma consulta usando Procedure
-    public boolean updateConsultaUsingProcedure(ConsultaDTO consultaDTO) {
-        return jdbcTemplate.update(connection -> {
-            CallableStatement call = connection.prepareCall("{execute AtualizarConsulta(?, ?, ?, ?, ?)}");
-            call.setLong(1, consultaDTO.getIdConsulta());
-            call.setDate(2, java.sql.Date.valueOf(String.valueOf(consultaDTO.getDataConsulta())));
-            call.setLong(3, consultaDTO.getPacienteId());
-            call.setLong(4, consultaDTO.getDentistaId());
-            call.setString(5, consultaDTO.getStatus());
-            return call;
-        }) > 0;
-    }
-
-    // Método para deletar uma consulta usando Procedure
-    public boolean deleteConsultaUsingProcedure(Long idConsulta) {
-        return jdbcTemplate.update(connection -> {
-            CallableStatement call = connection.prepareCall("{execute DeletarConsulta(?)}");
-            call.setLong(1, idConsulta);
-            return call;
-        }) > 0;
-    }
+//    // Método para inserir uma consulta usando Procedure
+//    public boolean insertConsultaUsingProcedure(ConsultaDTO consultaDTO) {
+//        return jdbcTemplate.update(connection -> {
+//            CallableStatement call = connection.prepareCall("{execute InserirConsulta(?, ?, ?, ?)}");
+//            call.setDate(1, java.sql.Date.valueOf(String.valueOf(consultaDTO.getDataConsulta())));
+//            call.setLong(2, consultaDTO.getPacienteId());
+//            call.setLong(3, consultaDTO.getDentistaId());
+//            call.setString(4, consultaDTO.getStatus());
+//            return call;
+//        }) > 0;
+//    }
+//
+//    // Método para atualizar uma consulta usando Procedure
+//    public boolean updateConsultaUsingProcedure(ConsultaDTO consultaDTO) {
+//        return jdbcTemplate.update(connection -> {
+//            CallableStatement call = connection.prepareCall("{execute AtualizarConsulta(?, ?, ?, ?, ?)}");
+//            call.setLong(1, consultaDTO.getIdConsulta());
+//            call.setDate(2, java.sql.Date.valueOf(String.valueOf(consultaDTO.getDataConsulta())));
+//            call.setLong(3, consultaDTO.getPacienteId());
+//            call.setLong(4, consultaDTO.getDentistaId());
+//            call.setString(5, consultaDTO.getStatus());
+//            return call;
+//        }) > 0;
+//    }
+//
+//    // Método para deletar uma consulta usando Procedure
+//    public boolean deleteConsultaUsingProcedure(Long idConsulta) {
+//        return jdbcTemplate.update(connection -> {
+//            CallableStatement call = connection.prepareCall("{execute DeletarConsulta(?)}");
+//            call.setLong(1, idConsulta);
+//            return call;
+//        }) > 0;
+//    }
 
     public List<Consulta> findAll() {
         return consultaRepository.findAll();
@@ -78,7 +78,6 @@ public class ConsultaService {
         Consulta consulta = new Consulta();
         consulta.setDataConsulta(consultaDTO.getDataConsulta());
         consulta.setStatus(consultaDTO.getStatus());
-        consulta.setDetalhes(consultaDTO.getDetalhes());
 
         // Buscar paciente
         Paciente paciente = pacienteRepository.findById(consultaDTO.getPacienteId())
@@ -90,6 +89,15 @@ public class ConsultaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Dentista não encontrado com ID: " + consultaDTO.getDentistaId()));
         consulta.setDentista(dentista); // Supondo que você tenha um método setDentista na classe Consulta
 
+        String sql = "{ call Insert_Consulta(?, ?, ?, ?) }"; // Ajuste conforme o nome e parâmetros da sua procedure
+
+        jdbcTemplate.update(sql,
+                consultaDTO.getDataConsulta(),
+                consultaDTO.getStatus(),
+                consultaDTO.getPacienteId(),
+                consultaDTO.getDentistaId()
+        );
+
         return consultaRepository.save(consulta);
     }
 
@@ -99,7 +107,6 @@ public class ConsultaService {
 
         consulta.setDataConsulta(consultaDTO.getDataConsulta());
         consulta.setStatus(consultaDTO.getStatus());
-        consulta.setDetalhes(consultaDTO.getDetalhes());
 
         if (consultaDTO.getPacienteId() != null) {
             Paciente paciente = pacienteRepository.findById(consultaDTO.getPacienteId())

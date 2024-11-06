@@ -16,8 +16,6 @@ public class ConsultaDTO {
     @NotNull(message = "O status da consulta é obrigatório")
     private String status;
 
-    private String detalhes;
-
     @NotNull(message = "O ID do paciente é obrigatório")
     private Long pacienteId;
 

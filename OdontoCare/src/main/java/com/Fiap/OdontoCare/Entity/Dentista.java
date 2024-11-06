@@ -21,8 +21,6 @@ public class Dentista {
     private String especialidade;
     @Column(name = "Telefone", nullable = false, length = 20)
     private String telefone;
-    @Column(name = "Email")
-    private String email;
 
     @OneToMany(mappedBy = "dentista", cascade = CascadeType.ALL)
     private List<Consulta> consultas;

@@ -20,8 +20,6 @@ public class Consulta {
     private LocalDateTime dataConsulta;
     @Column(name = "Status", nullable = false, length = 50)
     private String status;
-    @Column(name = "Detalhes", length = 255)
-    private String detalhes;
 
     @ManyToOne
     @JoinColumn(name = "ID_Paciente", nullable = false)

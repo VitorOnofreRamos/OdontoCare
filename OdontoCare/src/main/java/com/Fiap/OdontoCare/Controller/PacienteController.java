@@ -29,21 +29,21 @@ public class PacienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Paciente> createPaciente(@Valid @RequestBody PacienteDTO pacienteDTO) {
-        Paciente savedPaciente = pacienteService.save(pacienteDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedPaciente);
+    public ResponseEntity createPaciente(@Valid @RequestBody PacienteDTO pacienteDTO) {
+        this.pacienteService.insertWithProcedure(pacienteDTO);
+        return ResponseEntity.ok("Paciente criado com sucesso");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Paciente> updatePaciente(@PathVariable Long id, @Valid @RequestBody PacienteDTO pacienteDTO) {
+    public ResponseEntity updatePaciente(@PathVariable Long id, @Valid @RequestBody PacienteDTO pacienteDTO) {
         pacienteDTO.setId(id);
-        Paciente updatedPaciente = pacienteService.update(pacienteDTO);
-        return ResponseEntity.ok(updatedPaciente);
+        this.pacienteService.updateWithProcedure(pacienteDTO);
+        return ResponseEntity.ok("Paciente atualizado com sucesso");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePaciente(@PathVariable Long id) {
-        pacienteService.deleteById(id);
+        this.pacienteService.deleteWithProcedure(id);
         return ResponseEntity.noContent().build();
     }
 }

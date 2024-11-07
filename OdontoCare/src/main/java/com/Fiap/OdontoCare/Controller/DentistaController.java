@@ -28,21 +28,21 @@ public class DentistaController {
     }
 
     @PostMapping
-    public ResponseEntity<Dentista> createDentista(@Valid @RequestBody DentistaDTO dentistaDTO) {
-        Dentista savedDentista = dentistaService.save(dentistaDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedDentista);
+    public ResponseEntity createDentista(@Valid @RequestBody DentistaDTO dentistaDTO) {
+        this.dentistaService.insertWithProcedure(dentistaDTO);
+        return ResponseEntity.ok("Dentista criado com sucesso");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Dentista> updateDentista(@PathVariable Long id, @Valid @RequestBody DentistaDTO dentistaDTO) {
+    public ResponseEntity updateDentista(@PathVariable Long id, @Valid @RequestBody DentistaDTO dentistaDTO) {
         dentistaDTO.setIdDentista(id);
-        Dentista updatedDentista = dentistaService.update(dentistaDTO);
-        return ResponseEntity.ok(updatedDentista);
+        this.dentistaService.updateWithProcedure(dentistaDTO);
+        return ResponseEntity.ok("Dentista atualizado com sucesso");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDentista(@PathVariable Long id) {
-        dentistaService.deleteById(id);
+        this.dentistaService.deleteWithProcedure(id);
         return ResponseEntity.noContent().build();
     }
 }

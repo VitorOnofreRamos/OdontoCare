@@ -29,23 +29,21 @@ public class ConsultaController {
     }
 
     @PostMapping
-    public ResponseEntity<Consulta> createConsulta(@Valid @RequestBody ConsultaDTO consultaDTO) {
-        consultaService.save(consultaDTO);
-        //return ResponseEntity.status(HttpStatus.CREATED).body(savedConsulta);
-        return ResponseEntity.noContent().build();
-   }
+    public ResponseEntity createConsulta(@Valid @RequestBody ConsultaDTO consultaDTO) {
+        this.consultaService.insertWithProcedure(consultaDTO);
+        return ResponseEntity.ok("Consulta criada com sucesso");
+    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Consulta> updateConsulta(@PathVariable Long id, @Valid @RequestBody ConsultaDTO consultaDTO) {
+    public ResponseEntity updateConsulta(@PathVariable Long id, @Valid @RequestBody ConsultaDTO consultaDTO) {
         consultaDTO.setIdConsulta(id);
-        consultaService.update(consultaDTO);
-        //return ResponseEntity.ok(updatedConsulta);
-        return ResponseEntity.noContent().build();
+        this.consultaService.updateWithProcedure(consultaDTO);
+        return ResponseEntity.ok("Consulta atualizada com sucesso");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteConsulta(@PathVariable Long id) {
-        consultaService.deleteById(id);
+        this.consultaService.deleteWithProcedure(id);
         return ResponseEntity.noContent().build();
     }
 }

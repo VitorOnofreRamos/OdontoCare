@@ -18,7 +18,7 @@ public class DentistaDTO {
     @Size(max = 100)
     private String nome;
 
-
+    @NotBlank
     private String cro;
 
     @NotBlank

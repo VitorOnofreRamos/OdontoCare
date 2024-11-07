@@ -30,14 +30,14 @@ public class DentistaController {
     @PostMapping
     public ResponseEntity createDentista(@Valid @RequestBody DentistaDTO dentistaDTO) {
         this.dentistaService.insertWithProcedure(dentistaDTO);
-        return ResponseEntity.ok("Dentista criado com sucesso");
+        return ResponseEntity.ok("OK");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity updateDentista(@PathVariable Long id, @Valid @RequestBody DentistaDTO dentistaDTO) {
         dentistaDTO.setIdDentista(id);
         this.dentistaService.updateWithProcedure(dentistaDTO);
-        return ResponseEntity.ok("Dentista atualizado com sucesso");
+        return ResponseEntity.ok("OK");
     }
 
     @DeleteMapping("/{id}")

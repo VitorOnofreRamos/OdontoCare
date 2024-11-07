@@ -31,14 +31,14 @@ public class PacienteController {
     @PostMapping
     public ResponseEntity createPaciente(@Valid @RequestBody PacienteDTO pacienteDTO) {
         this.pacienteService.insertWithProcedure(pacienteDTO);
-        return ResponseEntity.ok("Paciente criado com sucesso");
+        return ResponseEntity.ok("OK");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity updatePaciente(@PathVariable Long id, @Valid @RequestBody PacienteDTO pacienteDTO) {
         pacienteDTO.setId(id);
         this.pacienteService.updateWithProcedure(pacienteDTO);
-        return ResponseEntity.ok("Paciente atualizado com sucesso");
+        return ResponseEntity.ok("OK");
     }
 
     @DeleteMapping("/{id}")

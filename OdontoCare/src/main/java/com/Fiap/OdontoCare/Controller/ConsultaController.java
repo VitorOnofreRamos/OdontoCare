@@ -31,14 +31,14 @@ public class ConsultaController {
     @PostMapping
     public ResponseEntity createConsulta(@Valid @RequestBody ConsultaDTO consultaDTO) {
         this.consultaService.insertWithProcedure(consultaDTO);
-        return ResponseEntity.ok("Consulta criada com sucesso");
+        return ResponseEntity.ok("OK");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity updateConsulta(@PathVariable Long id, @Valid @RequestBody ConsultaDTO consultaDTO) {
         consultaDTO.setIdConsulta(id);
         this.consultaService.updateWithProcedure(consultaDTO);
-        return ResponseEntity.ok("Consulta atualizada com sucesso");
+        return ResponseEntity.ok("OK");
     }
 
     @DeleteMapping("/{id}")

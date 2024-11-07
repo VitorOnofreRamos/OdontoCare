@@ -32,14 +32,14 @@ public class HistoricoConsultasController {
     @PostMapping
     public ResponseEntity createHistoricoConsulta(@Valid @RequestBody HistoricoConsultasDTO historicoConsultaDTO) {
         this.historicoConsultasService.insertWithProcedure(historicoConsultaDTO);
-        return ResponseEntity.ok("Historico criado com sucesso");
+        return ResponseEntity.ok("OK");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity updateHistoricoConsulta(@PathVariable Long id, @Valid @RequestBody HistoricoConsultasDTO historicoConsultaDTO) {
         historicoConsultaDTO.setId(id);
         this.historicoConsultasService.updateWithProcedure(historicoConsultaDTO);
-        return ResponseEntity.ok("Historico atualizado com sucesso");
+        return ResponseEntity.ok("OK");
     }
 
     @DeleteMapping("/{id}")

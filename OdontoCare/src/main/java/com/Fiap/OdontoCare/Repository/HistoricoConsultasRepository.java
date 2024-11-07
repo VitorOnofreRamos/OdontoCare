@@ -17,12 +17,12 @@ public interface HistoricoConsultasRepository extends JpaRepository<HistoricoCon
             @Param("p_ID_Consulta") Long idConsulta,
             @Param("p_Data_Atendimento") LocalDateTime dataAtendimento,
             @Param("p_Motivo_Consulta") String motivoConsulta,
-            @Param("p_Observacoes") String observacaoes
+            @Param("p_Observacoes") String observacoes
     );
 
     @Procedure(name = "UPDATE_HISTORICO_CONSULTA")
     void UPDATE_HISTORICO_CONSULTA(
-            @Param("p_ID_Consulta") Long id,
+            @Param("p_ID_Historico") Long id,
             @Param("p_ID_Consulta") Long idConsulta,
             @Param("p_Data_Atendimento") LocalDateTime dataAtendimento,
             @Param("p_Motivo_Consulta") String motivoConsulta,
@@ -31,6 +31,6 @@ public interface HistoricoConsultasRepository extends JpaRepository<HistoricoCon
 
     @Procedure(name = "DELETE_HISTORICO_CONSULTA")
     void DELETE_HISTORICO_CONSULTA(
-            @Param("p_ID_Consulta") Long id
+            @Param("p_ID_Historico") Long id
     );
 }

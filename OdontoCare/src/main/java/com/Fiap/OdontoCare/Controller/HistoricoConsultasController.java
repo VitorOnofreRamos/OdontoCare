@@ -30,21 +30,21 @@ public class HistoricoConsultasController {
     }
 
     @PostMapping
-    public ResponseEntity<HistoricoConsultas> createHistoricoConsulta(@Valid @RequestBody HistoricoConsultasDTO historicoConsultaDTO) {
-        HistoricoConsultas savedHistoricoConsulta = historicoConsultasService.save(historicoConsultaDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedHistoricoConsulta);
+    public ResponseEntity createHistoricoConsulta(@Valid @RequestBody HistoricoConsultasDTO historicoConsultaDTO) {
+        this.historicoConsultasService.insertWithProcedure(historicoConsultaDTO);
+        return ResponseEntity.ok("Historico criado com sucesso");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HistoricoConsultas> updateHistoricoConsulta(@PathVariable Long id, @Valid @RequestBody HistoricoConsultasDTO historicoConsultaDTO) {
+    public ResponseEntity updateHistoricoConsulta(@PathVariable Long id, @Valid @RequestBody HistoricoConsultasDTO historicoConsultaDTO) {
         historicoConsultaDTO.setId(id);
-        HistoricoConsultas updatedHistoricoConsulta = historicoConsultasService.save(historicoConsultaDTO);
-        return ResponseEntity.ok(updatedHistoricoConsulta);
+        this.historicoConsultasService.updateWithProcedure(historicoConsultaDTO);
+        return ResponseEntity.ok("Historico atualizado com sucesso");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteHistoricoConsulta(@PathVariable Long id) {
-        historicoConsultasService.deleteById(id);
+        this.historicoConsultasService.deleteWithProcedure(id);
         return ResponseEntity.noContent().build();
     }
 }

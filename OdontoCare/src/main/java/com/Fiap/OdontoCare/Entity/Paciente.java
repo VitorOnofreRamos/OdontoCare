@@ -32,8 +32,5 @@ public class Paciente {
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL)
     private List<Consulta> consultas;
-
-    public void setEmail(@NotBlank @Email(message = "Email inválido") String email) {
-    }
 }
 

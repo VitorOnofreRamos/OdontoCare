@@ -32,10 +32,6 @@ public class PacienteDTO {
     private String telefone;
 
     @NotBlank
-    @Email(message = "Email inválido")
-    private String email;
-
-    @NotBlank
     @Size(max = 200)
     private String endereco;
 }
